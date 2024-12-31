@@ -1,0 +1,28 @@
+<nav class="navbar bg-white shadow sticky-top w-100">
+  <div class="container-fluid">
+    <div class="navbar-brand">
+      <%=link_to "FrensBook", root_path, class:"text-decoration-none fw-bold", style:"font-size: 30px" %>
+    </div>
+
+
+  <%if user_signed_in?%>
+  <ul class="nav">
+    <div class="nav-item float-end">
+          <%= link_to (current_user.name), current_user, method: :delete, class:"btn text-decoration-none mx-2" %>
+    </div>
+
+    <div class="nav-item float-end">
+          <%= button_to "Log out", destroy_user_session_path, method: :delete, class:"btn btn-primary" %>
+    </div>
+
+  <%end%>
+  </ul>
+
+
+  </div>
+</nav>
+
+
+
+
+

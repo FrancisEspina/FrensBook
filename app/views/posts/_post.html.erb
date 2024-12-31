@@ -1,0 +1,78 @@
+<div id="<%= dom_id post %>">
+ 
+    <div class="card m-2 mb-4 shadow", style="height: 20rem">
+        <div class="card-header p-3">
+            <h6> <%=post.user.name%> <div class="float-end"> <%= current_user == post.user ? link_to("", edit_user_post_path(user_id: current_user.id, id: post.id), class: " h5 mx-1 bi bi-pencil-square") : "" %> <span class="badge bg-secondary"> <%=time_ago_in_words(post.updated_at)%> ago </span></div>
+      </h6>
+
+
+        </div>
+        <div class="card-body p-4">
+        <%# --------content----------- %>
+          <%=post.content%>
+        <%# --------content----------- %>
+        </div>
+        <div class="card-header">
+          <strong class="text-primary"><%= post.likes.any? ? "Liked by #{(render "names", likes: post.likes).truncate(50)}"  : "" %></strong>
+        </div>
+        <div class="card-footer">
+              <ul class="nav nav-pills nav-fill">
+              <li class="nav-item">
+
+
+                <%like = like_exist(post, current_user) %>
+                <%if like %>
+                    <%= link_to "Unlike", like_path(like), data: { 'turbo-method' => :delete }, class: "btn fw-bold text-primary bi bi-hand-thumbs-up-fill" %>
+                <%else%>
+                    <%= button_to "Like", likes_path(user_id: current_user.id, post_id: post.id), data: { 'turbo-method' => :post }, class: "btn fw-bold text-primary bi bi-hand-thumbs-up" %>
+                <%end%>
+
+
+              </li>
+               <li class="nav-item">
+                <%=link_to "Comment","#", class:"btn"%>
+              </li>
+            </ul>
+        </div>
+    </div>
+
+          <div class="card m-auto m-2">
+              <div class="card-body">
+                
+                  <%= form_with(model: @comment, url: user_post_comments_path(post_id: post.id, user_id: current_user.id)) do |form| %>
+                    <%= form.text_field :content, required: true, class: "form-control mb-3 custom-round", placeholder: "Leave a comment" %>
+                      <hr>
+                      <%= form.submit 'Comment', class:"btn btn-primary float-end"%>
+                  <% end %>
+              </div>
+          </div>
+
+
+
+
+        <%if post.comments.empty?%>
+
+                <%else%>
+                   
+                    <%post.comments.each do |comment| %>
+                    <div class="mb-4 mt-4">
+                     <h1 class="card p-3 mx-4 bi bi-person-fill float-start"></h1>
+                      <div class="card w-75">
+                        <div class="card-header"><%=comment.user.name%></div>
+                        <div class="card-body">
+                            <%=comment.content%>
+                            <%if comment.user == current_user%>
+                            <%=link_to "Edit" %>
+                            <%end%>
+                        </div>
+                      </div>
+                    </div>
+                    <%end%>
+
+
+                <%end%>
+
+
+
+</div>
+

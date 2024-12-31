@@ -1,0 +1,35 @@
+<br>
+<br>
+<p class="text-center"><strong class="text-primary" m-auto style="font-size: 50px">FrensBook</strong></p>
+<div class="card m-auto shadow p-4", style="width: 25rem">
+  <div class="card-body">
+    <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+      <div class="field">
+        <%= f.email_field :email, autofocus: true, autocomplete: "email", placeholder: "Email", class:"form-control mb-3" %>
+      </div>
+      <div class="field">
+        <%= f.password_field :password, autocomplete: "current-password", placeholder: "Password", class:"form-control mb-3" %>
+      </div>
+
+      <% if devise_mapping.rememberable? %>
+        <div class="field">
+            <%= label :remember_me, class: "form-check-label" do %>
+            <%= f.check_box :remember_me, class: "form-check-input" %>
+            Remember me
+            <%end%>
+        </div>
+      <% end %>
+
+      <div class="actions">
+        <br>
+        <%= f.submit "Log in", class:"btn btn-primary w-100" %>
+      </div>
+    <% end %>
+
+    <div>
+      <hr>
+      <%= render "users/shared/links" %>
+    </div>
+
+  </div>
+</div>

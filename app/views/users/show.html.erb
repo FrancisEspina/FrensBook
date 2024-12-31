@@ -1,0 +1,123 @@
+<%#Users show %>
+
+<div class="m-auto w-75">
+        <div class="card w-100 m-auto">
+       
+            <div class="card-body">
+            <strong>Profile</strong>
+                <h1><%=@user.name%></h1>
+
+                <p><%=@accepted_friends.count%> Friends </p>
+                
+                <ul class="nav float-end">
+                    <%if @user == current_user%>
+                        <%=button_to "Edit Profile", "#", class:"btn btn-primary mx-2"%>
+                    <%else%>
+
+                         
+                                <%reciever = Friendship.find_by(user_id: @user.id, friend_id: current_user.id)%>
+                                    <%requesting_friend = Friendship.find_by(user_id: current_user.id, friend_id: @user.id)%>
+                                    
+                                    <%if requesting_friend %>
+                                        <%if requesting_friend.status=="pending"%>
+                                            <%= link_to "Cancel", friendship_path(requesting_friend), data: { 'turbo-method' => :delete }, class: "btn btn-primary" %>
+                                        <%else%>
+                                           <%= link_to "Unfriend", friendship_path(requesting_friend), data: { 'turbo-method' => :delete }, class: "btn btn-primary" %>
+                                        <%end%>
+                                    <%elsif Friendship.find_by(user_id: @user.id, friend_id: current_user.id)%>
+                                            <%incoming_friend = Friendship.find_by(user_id: @user.id, friend_id: current_user.id)%>
+                                        <%if incoming_friend.status=="pending"%>
+                                            <%= link_to "Accept", friendship_path(incoming_friend, status: "accepted"), data: { 'turbo-method' => :patch }, class:"btn mx-1 btn-primary"%>
+                                            <%= link_to "Decline", friendship_path(incoming_friend), data: { 'turbo-method' => :delete }, class: "btn btn-primary" %>
+                                        <%else%>
+                                            <%= link_to "Unfriend", friendship_path(incoming_friend), data: { 'turbo-method' => :delete }, class: "btn btn-primary" %>
+                                        <%end%>
+                                    <%else%>
+                                            <%=button_to "Add Friend", friendships_path(user_id: current_user.id, friend_id: @user.id, status:'pending'), class:"btn btn-primary"%>
+                                    <%end%>
+
+                                
+                        
+                    <%end%>
+                </ul>
+
+                
+            </div>
+        </div>
+
+
+
+        <%#------------------friends------------------------------%>
+        <div class="card w-25 mt-2 float-end">
+        <strong class="card-body">Friends</strong>
+        <div class="card-body limit">
+
+
+
+        </div>
+        </div>
+        <%#------------------------------------------------%>
+
+        
+        <%#----------------------add post---------------------------------%>
+        <div class="card mx-2 mt-2" style="width: 44rem;">
+            
+                <div class="card-body">
+                
+                    <%= form_with(model: @post, url: user_posts_path(current_user.id)) do |form| %>
+                    <%= form.text_field :content, required: true, class: "form-control mb-3 custom-round", placeholder: "What's on your mind #{current_user.name}?" %>
+                        <hr>
+                        <%= form.submit 'Post', class:"btn btn-primary w-100 float-end"%>
+                    <% end %>
+                
+                </div>
+        </div>
+        <%#-------------------------------------------------------------%>
+
+
+
+
+
+
+
+        <%#------------------user posts------------------------------%>
+        <div style="width: 45rem;">
+        <%@user_posts.each do |post|%>
+            <div class="card m-2 mb-4 shadow", style="height: 20rem">
+                <div class="card-header p-3">
+                    <h6> <%=post.user.name%> <span class="badge float-end bg-secondary"> <%=time_ago_in_words(post.created_at)%> ago </span></h6>
+
+                </div>
+                <div class="card-body p-4">
+                <%# --------content----------- %>
+                <%=post.content%>
+                <%# --------content----------- %>
+                </div>
+                 <div class="card-header">
+                    <strong class="text-primary"><%= post.likes.any? ? "Liked by #{(render "names", likes: post.likes).truncate(50)}"  : "" %></strong>
+                </div>
+                <div class="card-footer">
+                    <ul class="nav nav-pills nav-fill">
+                    <li class="nav-item">
+                        
+                            <%like = like_exist(post, current_user) %>
+                            <%if like %>
+                                <%= link_to "Like", like_path(like), data: { 'turbo-method' => :delete }, class: "btn fw-bold text-primary bi bi-hand-thumbs-up-fill" %>
+                            <%else%>
+                                <%= button_to "Like", likes_path(user_id: current_user.id, post_id: post.id), data: { 'turbo-method' => :post }, class: "btn fw-bold text-primary bi bi-hand-thumbs-up" %>
+                            <%end%>
+
+                    </li>
+                    <li class="nav-item">
+                        <%=button_to "Comment", "#", class:"btn"%>
+
+                    </li>
+
+                    </ul>
+                </div>
+            </div>
+
+        <%end%>
+        </div>
+        <%#-----------------------------------------------%>
+</div>

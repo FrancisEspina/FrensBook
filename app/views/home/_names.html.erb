@@ -1,0 +1,3 @@
+<% likes.each do |like| %>
+    <%= like.user.name %><%= like == likes.last ? "" : "," %>
+<% end %>

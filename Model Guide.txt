@@ -1,0 +1,20 @@
+
+1. Friendships:
+   - `user_id` (integer): The ID of the user sending or receiving the friend request.
+   - `friend_id` (integer): The ID of the user who is being sent the friend request.
+   - `status` (string): The status of the friendship request, such as "pending," "accepted," or "declined."
+
+2. Posts:
+   - `content` (text): The content or text of the post.
+   - `user_id` (integer): The ID of the user who created the post.
+
+3. Comments:
+   - `content` (text): The content or text of the comment.
+   - `user_id` (integer): The ID of the user who posted the comment.
+   - `post_id` (integer): The ID of the post that the comment belongs to.
+
+4. Likes:
+   - `user_id` (integer): The ID of the user who performed the like.
+   - `post_id` (integer): The ID of the post that the like belongs to.
+
+Remember to create appropriate database columns for these attributes when generating migrations for each model.
